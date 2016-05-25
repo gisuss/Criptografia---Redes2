@@ -13,7 +13,7 @@ string desencriptar(string A, string B);
 string getText();
 bool esPrimo(int X);
 bool esPar(int X);
-bool esPermitido(char p);
+bool esEnie(char p);
 int asciival(char c);
 
 int main() {
@@ -35,7 +35,7 @@ int main() {
 	std::cout << BOLD(FGRN("\t+-+-+-+-+-+-+-+-+-+-+-+-+-+-+			")) << endl;
 	std::cout << BOLD(FGRN("\t|     Mensaje a Encriptar   |			")) << endl;
 	std::cout << BOLD(FGRN("\t+-+-+-+-+-+-+-+-+-+-+-+-+-+-+			")) << endl;
-	std::cout << texto << endl;
+	std::cout << texto << endl << endl;
 	
 	codificado = encriptar(texto,genPassword());
 	std::cout << BOLD(FYEL("\t\t    \x1B[0m\x1B[32m.'|\x1B[0m       \x1B[1m\x1B[37m✫\x1B[0m            \x1B[1m\x1B[37m☽\x1B[0m ")) << endl;
@@ -67,13 +67,14 @@ int main() {
 string genPassword() {
 	string pass;
 	
-	pass = "TerjeSorgjerd"; //13
+	pass = "Terj3Sorgjerñ";
 	
 	return pass;
 }
 
 string getText() {
 	char c;
+	bool band = true;
 	string textoplano;
 	ifstream in("texto.txt", ios::in);
 
@@ -81,9 +82,10 @@ string getText() {
 		std::cout << FRED("ERROR AL INTENTAR ABRIR EL FICHERO (texto.txt)") << endl << endl;
 		exit(1);
 	}else{
-		while (!in.eof()) {
+		while (!in.eof() && band) {
 			in.get(c);
-			textoplano += c;
+			if (c != '\n') textoplano += c;
+			else band = false;
 		}
 	}
 	
@@ -101,26 +103,25 @@ string encriptar(string A, string B) {
 	string tabla[filas][lenB];
 	string result;
 	bool band = false;
+	char y;
 	ofstream out("MensajeCifrado.txt", ios::out | ios::binary | ios::trunc);
 	
 	/* Vacia el texto en la matriz por filas */
 	while (i < filas && (!band)) {
 		while ((j < lenB) && (!band)) {
+			y = A[k];
 			
-			//letra = A[k];
-			char y = A[k];
-			
-			if (esPermitido(y)) tabla[i][j] = A[k];
+			if (!(esEnie(y))) tabla[i][j] = A[k];
 			else tabla[i][j] = y;
 			
 			k++;
 			j++;
 			
-			if (k >= lenA)
+			if (k > lenA)
 				band = true;
 		}
 		
-		if (j == lenB && (!band)) {
+		if (j == lenB) {
 			i++;
 			j=0;
 		}
@@ -132,7 +133,7 @@ string encriptar(string A, string B) {
 			for (k=j ; k<lenB ; k++)
 				tabla[i][k] = "+";
 		}
-	}	
+	}
 	
 	/* Muestra matriz */
 	/*for (i=0 ; i<filas ; i++) {
@@ -141,9 +142,9 @@ string encriptar(string A, string B) {
 		cout << endl;
 	}*/
 	
-	/* Construyo los arrays Primo y NoPrimo */
+	/* Construyo los arrays Primos y NoPrimos */
 	for (i=0 ; i<lenB ; i++) {
-		k = static_cast<int>(B[i]);
+		k = asciival(B[i]);
 		if (esPrimo(k)) {
 			Primos[i] = k;
 			NoPrimos[i] = -1;
@@ -233,7 +234,7 @@ string desencriptar(string A, string B) {
 	
 	/* Construyo los arrays Primos y NoPrimos */
 	for (i=0 ; i<lenB ; i++) {
-		k = static_cast<int>(B[i]);
+		k = asciival(B[i]);
 		if (esPrimo(k)) {
 			Primos[i] = k;
 			NoPrimos[i] = -1;
@@ -276,7 +277,7 @@ string desencriptar(string A, string B) {
 	}
 	
 	/* Luego Todas las columnas NoPrimas */
-	while ((vnoprimo > 0) ){//&& (cont <= lenA)) {
+	while (vnoprimo > 0) {
 		for (i=0 ; i<lenB ; i++) {
 			if ((NoPrimos[i] != -1) && (NoPrimos[i] < menor)) {
 				menor = NoPrimos[i];
@@ -335,8 +336,8 @@ bool esPrimo(int X) {
 		if ((X % i) == 0)
 			band = false;
     }
-  
-   return band;
+    
+    return band;
 }
 
 bool esPar(int X) {
@@ -349,8 +350,8 @@ bool esPar(int X) {
 	return band;
 }
 
-bool esPermitido(char p) {
-	int num = static_cast<int>(p);
+bool esEnie(char p) {
+	int num = asciival(p);
 	bool band = false;
 	
 	if ((num >= 65) && (num <= 90)) band = true;
@@ -364,6 +365,209 @@ bool esPermitido(char p) {
 }
 
 int asciival(char c) {
-	return static_cast<int>(c);
+	int valascii;
+	
+	switch (c) {
+		case ' ': 
+			valascii = 32;
+		break;
+		case 'a': 
+			valascii = 97;
+		break;
+		case 'b': 
+			valascii = 98;
+		break;
+		case 'c': 
+			valascii = 99;
+		break;
+		case 'd': 
+			valascii = 100;
+		break;
+		case 'e': 
+			valascii = 101;
+		break;
+		case 'f': 
+			valascii = 102;
+		break;
+		case 'g': 
+			valascii = 103;
+		break;
+		case 'h': 
+			valascii = 104;
+		break;
+		case 'i': 
+			valascii = 105;
+		break;
+		case 'j': 
+			valascii = 106;
+		break;
+		case 'k': 
+			valascii = 107;
+		break;
+		case 'l': 
+			valascii = 108;
+		break;
+		case 'm': 
+			valascii = 109;
+		break;
+		case 'n': 
+			valascii = 110;
+		break;
+		case 'o': 
+			valascii = 111;
+		break;
+		case 'p': 
+			valascii = 112;
+		break;
+		case 'q': 
+			valascii = 113;
+		break;
+		case 'r': 
+			valascii = 114;
+		break;
+		case 's': 
+			valascii = 115;
+		break;
+		case 't': 
+			valascii = 116;
+		break;
+		case 'u': 
+			valascii = 117;
+		break;
+		case 'v': 
+			valascii = 118;
+		break;
+		case 'w': 
+			valascii = 119;
+		break;
+		case 'x': 
+			valascii = 120;
+		break;
+		case 'y': 
+			valascii = 121;
+		break;
+		case 'z': 
+			valascii = 122;
+		break;
+		case 'A': 
+			valascii = 65;
+		break;
+		case 'B': 
+			valascii = 66;
+		break;
+		case 'C': 
+			valascii = 67;
+		break;
+		case 'D': 
+			valascii = 68;
+		break;
+		case 'E': 
+			valascii = 69;
+		break;
+		case 'F': 
+			valascii = 70;
+		break;
+		case 'G': 
+			valascii = 71;
+		break;
+		case 'H': 
+			valascii = 72;
+		break;
+		case 'I': 
+			valascii = 73;
+		break;
+		case 'J': 
+			valascii = 74;
+		break;
+		case 'K': 
+			valascii = 75;
+		break;
+		case 'L': 
+			valascii = 76;
+		break;
+		case 'M': 
+			valascii = 77;
+		break;
+		case 'N': 
+			valascii = 78;
+		break;
+		case 'O': 
+			valascii = 79;
+		break;
+		case 'P': 
+			valascii = 80;
+		break;
+		case 'Q': 
+			valascii = 81;
+		break;
+		case 'R': 
+			valascii = 82;
+		break;
+		case 'S': 
+			valascii = 83;
+		break;
+		case 'T': 
+			valascii = 84;
+		break;
+		case 'U': 
+			valascii = 85;
+		break;
+		case 'V': 
+			valascii = 86;
+		break;
+		case 'W': 
+			valascii = 87;
+		break;
+		case 'X': 
+			valascii = 88;
+		break;
+		case 'Y': 
+			valascii = 89;
+		break;
+		case 'Z': 
+			valascii = 90;
+		break;
+		case '.': 
+			valascii = 46;
+		break;
+		case ',': 
+			valascii = 44;
+		break;
+		case '0': 
+			valascii = 48;
+		break;
+		case '1': 
+			valascii = 49;
+		break;
+		case '2': 
+			valascii = 50;
+		break;
+		case '3': 
+			valascii = 51;
+		break;
+		case '4': 
+			valascii = 52;
+		break;
+		case '5': 
+			valascii = 53;
+		break;
+		case '6': 
+			valascii = 54;
+		break;
+		case '7': 
+			valascii = 55;
+		break;
+		case '8': 
+			valascii = 56;
+		break;
+		case '9': 
+			valascii = 57;
+		break;
+		
+		default:
+			valascii = 164;
+		break;
+	}
+	
+	return valascii;
 }
-
